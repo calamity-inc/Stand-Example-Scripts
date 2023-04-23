@@ -1,0 +1,28 @@
+-- In this model, we register labels as we need them.
+-- This has the downside that we cannot have multiple labels with the same English text.
+
+local MyLangLib
+pluto_class MyLangLib
+	static function trans(text)
+		local key = lang.find_registered(text)
+		if key == 0 then
+			key = lang.register(text)
+		end
+		return key
+	end
+
+	static function str_trans(text)
+		return lang.get_localised(MyLangLib.trans(text))
+	end
+end
+
+MyLangLib.trans("Hello, world!") -- We want to use this inside of the callback, but we need to register it now.
+menu.my_root():action(MyLangLib.trans("Say Hello"), {}, "", function()
+	util.toast(MyLangLib.str_trans("Hello, world!"))
+end)
+
+-- Then after they're all registered, we can do translations via find_registered.
+
+lang.set_translate("de")
+lang.translate(lang.find_registered("Say Hello"), "Sag Hallo")
+lang.translate(lang.find_registered("Hello, world!"), "Hallo, Welt!")

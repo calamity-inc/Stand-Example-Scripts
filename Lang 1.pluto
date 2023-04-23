@@ -1,0 +1,18 @@
+-- In this model, we register labels up-front.
+
+local MyLabels = {
+	SAYHI = lang.register("Say Hello"),
+	HI = lang.register("Hello, world!")
+}
+
+-- This is how we provide translations for the labels.
+
+lang.set_translate("de")
+lang.translate(MyLabels.SAYHI, "Sag Hallo")
+lang.translate(MyLabels.HI, "Hallo, Welt!")
+
+-- This is how we use the labels.
+
+menu.my_root():action(MyLabels.SAYHI, {}, "", function()
+	util.toast(lang.get_localised(MyLabels.HI))
+end)
