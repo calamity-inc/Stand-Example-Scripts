@@ -1,0 +1,7 @@
+local a = memory.scan(memory.get_name_of_this_module(), "2D 2D 5B 5B 53 74 61 6E 64 20")
+if a == 0 then
+	util.toast("scan failed")
+else
+	util.log(memory.read_string(a))
+	util.toast("got it, wrote to log")
+end
