@@ -1,0 +1,60 @@
+pluto_class PlayerProvider
+	function action(menu_name, command_names, help_text, callback)
+		self.list:action(menu_name, self.adjustCommandNames(command_names), help_text, function()
+			return callback(self)
+		end)
+	end
+end
+
+pluto_class PlayerProviderAll extends PlayerProvider
+	list = menu.ref_by_path("Players>All Players")
+
+	static function adjustCommandNames(command_names)
+		for k, v in command_names do
+			if command_names[k] ~= "" then -- Some retards do {''} instead of {}
+				command_names[k] ..= "all"
+			end
+		end
+		return command_names
+	end
+
+	function getPlayers(include_user: bool)
+		return players.list_all_with_excludes(include_user)
+	end
+end
+
+pluto_class PlayerProviderSingle extends PlayerProvider
+	function __construct(p, list)
+		self.p = p
+		self.list = list
+	end
+
+	static function adjustCommandNames(command_names)
+		return command_names
+	end
+
+	function getPlayers(include_user: bool)
+		return { self.p }
+	end
+end
+
+local function build_player_commands(pp)
+	pp:action("Player Action", {"luaplyaction"}, "", function(pp)
+		local names = {}
+		for pp:getPlayers(true) as p do
+			table.insert(names, players.get_name(p))
+		end
+		util.toast("Player action used for: "..table.concat(names, ", "))
+	end)
+	if pp instanceof PlayerProviderSingle then
+		pp:action("Individual Player Action", {}, "", function(pp)
+			util.toast("Individual player action used for: "..players.get_name(pp.p))
+		end)
+	end
+end
+
+build_player_commands(pluto_new PlayerProviderAll())
+
+players.add_command_hook(function(p, list)
+	build_player_commands(pluto_new PlayerProviderSingle(p, list))
+end)
