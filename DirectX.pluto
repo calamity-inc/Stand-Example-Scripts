@@ -5,7 +5,7 @@ local rect_colour = {
 	["a"] = 1.0
 }
 
-local c = menu.colour(menu.my_root(), "Rect Colour", {"dxrect"}, "", rect_colour, true, function(colour)
+local c = menu:my_root():colour("Rect Colour", {"dxrect"}, "", rect_colour, true, function(colour)
 	rect_colour = colour
 end)
 menu.rainbow(c)

@@ -17,11 +17,11 @@ local function showColour(value)
 	notify_id = HUD.END_TEXT_COMMAND_THEFEED_POST_TICKER(false, true)
 end
 
-menu.slider(menu.my_root(), "Notification Colour Slider", {"notifyslider"}, "", 0, 1000, 0, 1, showColour)
+menu.my_root():slider("Notification Colour Slider", {"notifyslider"}, "", 0, 1000, 0, 1, showColour)
 
-menu.click_slider(menu.my_root(), "Notification Colour Click Slider", {"notifyclickslider"}, "", 0, 1000, 0, 1, showColour)
+menu.my_root():click_slider("Notification Colour Click Slider", {"notifyclickslider"}, "", 0, 1000, 0, 1, showColour)
 
-menu.toggle(menu.my_root(), "Freeze Notification", {}, "", function(on)
+menu.my_root():toggle("Freeze Notification", {}, "", function(on)
 	freeze = on
 end, true)
 
