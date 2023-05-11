@@ -1,6 +1,6 @@
 pluto_class PlayerProvider
 	function action(menu_name, command_names, help_text, callback)
-		self.list:action(menu_name, self.adjustCommandNames(command_names), help_text, function()
+		self.list:action(menu_name, command_names, help_text, function()
 			return callback(self)
 		end)
 	end
@@ -8,15 +8,6 @@ end
 
 pluto_class PlayerProviderAll extends PlayerProvider
 	list = menu.ref_by_path("Players>All Players")
-
-	static function adjustCommandNames(command_names)
-		for k, v in command_names do
-			if command_names[k] ~= "" then -- Some retards do {''} instead of {}
-				command_names[k] ..= "all"
-			end
-		end
-		return command_names
-	end
 
 	function getPlayers(include_user: bool)
 		return players.list_all_with_excludes(include_user)
@@ -27,10 +18,6 @@ pluto_class PlayerProviderSingle extends PlayerProvider
 	function __construct(p, list)
 		self.p = p
 		self.list = list
-	end
-
-	static function adjustCommandNames(command_names)
-		return command_names
 	end
 
 	function getPlayers(include_user: bool)
