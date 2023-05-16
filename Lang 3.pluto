@@ -1,0 +1,112 @@
+-- In this model, we use name_for_config instead of the lang api.
+-- This has the advantage of allowing us to translate to any languge we want.
+-- However, as you can see, there's a lot of code needed.
+
+local MyLangLib
+pluto_class MyLangLib
+	canonical = {}
+	localised = {}
+	commands = {}
+
+	static function getCanonical(key: int): string
+		return MyLangLib.canonical[key]
+	end
+
+	static function getLocalised(key: int): string
+		return MyLangLib.localised[key]
+	end
+
+	static function register(text: string): int
+		local i = #MyLangLib.canonical + 1
+		MyLangLib.canonical[i] = text
+		return i
+	end
+
+	static function translate(key: int, text: string)
+		assert(MyLangLib.canonical[key] ~= nil)
+		MyLangLib.localised[key] = text
+	end
+end
+
+enum Languages begin
+	L_ENGLISH,
+	L_JAPANESE,
+
+	L_CANONICAL = L_ENGLISH
+end
+
+-- Register labels
+
+local MyLabels = {
+	SAYHI = MyLangLib.register("Say Hi"),
+	HI = MyLangLib.register("Hi")
+}
+
+-- Provide translations
+
+local selected_language = 0
+local function updateLocalised()
+	if selected_language == L_CANONICAL then
+		MyLangLib.localised = MyLangLib.canonical
+		return
+	end
+	MyLangLib.localised = {}
+	for k, v in MyLangLib.canonical do
+		MyLangLib.localised[k] = v
+	end
+	if selected_language == L_JAPANESE then
+		-- Stand's font does not have hiragana, so this is just transliterated English. :)
+		MyLangLib.translate(MyLabels.SAYHI, "セイ ハイ")
+		MyLangLib.translate(MyLabels.HI, "ハイ")
+	end
+end
+
+-- Handle creating & updating of commands
+
+local CommandCreator
+pluto_class CommandCreator
+	static function restCreate(cmd, menu_name)
+		cmd.name_for_config = MyLangLib.getCanonical(menu_name)
+		table.insert(MyLangLib.commands, cmd)
+		return cmd
+	end
+
+	function action(parent, menu_name, ...)
+		return CommandCreator.restCreate(menu.action(parent, MyLangLib.getLocalised(menu_name), ...), menu_name)
+	end
+end
+
+local pluto_class CommandUpdater
+	i = 1
+
+	function action(parent, menu_name, ...)
+		MyLangLib.commands[self.i].menu_name = MyLangLib.getLocalised(menu_name)
+		self.i += 1
+	end
+end
+
+local function createCommands(c)
+	c:action(menu.my_root(), MyLabels.SAYHI, {}, "", function()
+		util.toast(MyLangLib.getLocalised(MyLabels.HI))
+	end)
+end
+
+-- A list_select for the user to change the language
+-- Using apply_command_states so we instantly know the language in state and can create commands in the correct language
+
+local can_change_language = false
+menu.my_root():list_select("Language", {}, "", {
+	[L_ENGLISH] = {"English"},
+	[L_JAPANESE] = {"Japanese - 日本語"},
+}, L_CANONICAL, function(value)
+	selected_language = value
+	if can_change_language then
+		updateLocalised()
+		createCommands(pluto_new CommandUpdater())
+	end
+end)
+menu.apply_command_states()
+can_change_language = true
+
+updateLocalised()
+createCommands(pluto_new CommandCreator())
