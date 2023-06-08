@@ -1,4 +1,12 @@
 pluto_class PlayerProvider
+	function getPlayerNames(include_user: bool): table
+		local names = {}
+		for self:getPlayers(include_user) as p do
+			table.insert(names, players.get_name(p))
+		end
+		return names
+	end
+
 	function action(menu_name, command_names, help_text, callback)
 		self.m_list:action(menu_name, command_names, help_text, function()
 			return callback(self)
@@ -27,11 +35,7 @@ end
 
 local function build_player_commands(pp)
 	pp:action("Player Action", {"luaplyaction"}, "", function(pp)
-		local names = {}
-		for pp:getPlayers(true) as p do
-			table.insert(names, players.get_name(p))
-		end
-		util.toast("Player action used for: "..table.concat(names, ", "))
+		util.toast("Player action used for: "..table.concat(pp:getPlayerNames(true), ", "))
 	end)
 	if pp instanceof PlayerProviderSingle then
 		pp:action("Individual Player Action", {}, "", function(pp)
