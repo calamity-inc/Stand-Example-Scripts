@@ -12,6 +12,10 @@ pluto_class PlayerProvider
 			return callback(self)
 		end)
 	end
+
+	function list(...)
+		return self:cloneForList(self.m_list:list(...))
+	end
 end
 
 pluto_class PlayerProviderAll extends PlayerProvider
@@ -19,6 +23,12 @@ pluto_class PlayerProviderAll extends PlayerProvider
 
 	function getPlayers(include_user: bool)
 		return players.list_all_with_excludes(include_user)
+	end
+
+	function cloneForList(list)
+		local clone = pluto_new PlayerProviderAll()
+		clone.m_list = list
+		return clone
 	end
 end
 
@@ -31,6 +41,10 @@ pluto_class PlayerProviderSingle extends PlayerProvider
 	function getPlayers(include_user: bool)
 		return { self.p }
 	end
+
+	function cloneForList(list)
+		return pluto_new PlayerProviderSingle(self.p, list)
+	end
 end
 
 local function build_player_commands(pp)
@@ -40,6 +54,12 @@ local function build_player_commands(pp)
 	if pp instanceof PlayerProviderSingle then
 		pp:action("Individual Player Action", {}, "", function(pp)
 			util.toast("Individual player action used for: "..players.get_name(pp.p))
+		end)
+	end
+	do
+		local l = pp:list("A List")
+		l:action("Nested Action", {}, "", function(pp)
+			util.toast("Nested action used for: "..table.concat(pp:getPlayerNames(true), ", "))
 		end)
 	end
 end
