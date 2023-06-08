@@ -1,13 +1,13 @@
 pluto_class PlayerProvider
 	function action(menu_name, command_names, help_text, callback)
-		self.list:action(menu_name, command_names, help_text, function()
+		self.m_list:action(menu_name, command_names, help_text, function()
 			return callback(self)
 		end)
 	end
 end
 
 pluto_class PlayerProviderAll extends PlayerProvider
-	list = menu.ref_by_path("Players>All Players")
+	m_list = menu.ref_by_path("Players>All Players")
 
 	function getPlayers(include_user: bool)
 		return players.list_all_with_excludes(include_user)
@@ -17,7 +17,7 @@ end
 pluto_class PlayerProviderSingle extends PlayerProvider
 	function __construct(p, list)
 		self.p = p
-		self.list = list
+		self.m_list = list
 	end
 
 	function getPlayers(include_user: bool)
