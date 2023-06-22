@@ -1,5 +1,5 @@
 -- In this model, we use name_for_config instead of the lang api.
--- This has the advantage of allowing us to translate to any languge we want.
+-- This has the advantage of allowing us to translate to any language we want.
 -- However, as you can see, there's a lot of code needed.
 
 local MyLangLib
