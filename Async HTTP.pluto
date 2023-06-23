@@ -1,0 +1,6 @@
+async_http.init("https://stand.gg/versions.txt", nil, function(data)
+	util.toast("The latest Stand version is "..data:split(":")[2])
+
+	util.stop_script() -- our script has done everything we wanted it to do
+end)
+async_http.dispatch() -- implies util.keep_running
