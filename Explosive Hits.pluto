@@ -1,6 +1,6 @@
 util.require_natives(1663599433)
 
-local explosion_type const = 2 -- EXPLOSION_STICKYBOMB - https://wiki.rage.mp/index.php?title=Explosions
+local explosion_type <const> = 2 -- EXPLOSION_STICKYBOMB - https://wiki.rage.mp/index.php?title=Explosions
 
 local coords_ptr = v3.new()
 util.create_tick_handler(function()
