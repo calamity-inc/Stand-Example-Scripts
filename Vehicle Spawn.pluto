@@ -1,4 +1,4 @@
-util.require_natives(1663599433)
+util.require_natives("3095a")
 
 local function spawn_vehicle(model_name)
 	local hash = util.joaat(model_name)

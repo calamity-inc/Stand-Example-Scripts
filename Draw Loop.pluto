@@ -1,4 +1,4 @@
-util.require_natives(1663599433)
+util.require_natives("3095a")
 
 util.create_tick_handler(function()
 	HUD.BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING")

@@ -1,4 +1,4 @@
-util.require_natives(1663599433)
+util.require_natives("3095a")
 
 local explosion_type <const> = 2 -- EXPLOSION_STICKYBOMB - https://wiki.rage.mp/index.php?title=Explosions
 

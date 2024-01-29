@@ -1,4 +1,4 @@
-util.require_natives(1663599433)
+util.require_natives("3095a")
 
 local notify_id = 0
 local freeze = true

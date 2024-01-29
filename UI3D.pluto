@@ -1,4 +1,5 @@
-util.require_natives(1663599433)
+util.require_natives("3095a")
+
 util.create_tick_handler(function()
 	if GRAPHICS.UI3DSCENE_IS_AVAILABLE() then
 		if GRAPHICS.UI3DSCENE_PUSH_PRESET("CELEBRATION_WINNER") then
