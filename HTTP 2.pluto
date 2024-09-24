@@ -1,0 +1,6 @@
+-- Here we use Pluto's HTTP library.
+
+local { http } = require "*"
+
+local data = http.request("https://stand.sh/versions.txt") -- yields the thread while it downloads
+util.toast("The latest Stand version is "..data:split(":")[2])

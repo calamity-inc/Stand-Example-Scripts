@@ -1,0 +1,11 @@
+-- Here we use Stand's async_http API.
+
+async_http.init("https://stand.sh/versions.txt", nil, function(data)
+	util.toast("The latest Stand version is "..data:split(":")[2])
+
+	util.stop_script() -- our script has done everything we wanted it to do
+end, function(fail_reason)
+	util.toast("Request failed: "..fail_reason)
+	util.stop_script()
+end)
+async_http.dispatch() -- implies util.keep_running
